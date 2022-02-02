@@ -1,57 +1,37 @@
 const container = document.getElementById("container");
 const sizesAllowed = [4, 9];
 
-function createLayoutGrid(numberOfItems) {
-    if (!sizesAllowed.includes(numberOfItems)) {
-        numberOfItems = 4;
+const groups = [];
+
+function createGrid(numberOfItems) {
+  if (!sizesAllowed.includes(numberOfItems)) {
+    numberOfItems = 4;
+  }
+
+  const sodokuCol = new Array(numberOfItems).fill("minmax(50px, 70px)").join(" ");
+  const sodokuRow = new Array(numberOfItems).fill("minmax(50px, 70px)").join(" ");
+
+  const sodoku = document.createElement("div");
+  sodoku.style.gridTemplateColumns = sodokuCol;
+  sodoku.style.gridTemplateRows = sodokuRow;
+  sodoku.id = "sodoku";
+
+  const groupCount = 4;
+
+  for (let row = 1; row <= groupCount; row++) {
+    for (let col = 1; col <= groupCount; col++) {
+
+        const itemEl = document.createElement("div");
+        itemEl.id = `${row}-${col}`;
+        itemEl.classList.add("item");
+        itemEl.setAttribute("row", row);
+        itemEl.setAttribute("col", col);
+        itemEl.innerText = `${row}-${col}`;
+        sodoku.appendChild(itemEl);
     }
+  }
 
-    const col = new Array(Math.sqrt(numberOfItems)).fill("1fr").join(" ");
-    const row = new Array(Math.sqrt(numberOfItems)).fill("1fr").join(" ");
-
-    const sodoku = document.createElement("div");
-    sodoku.style.gridTemplateColumns = col;
-    sodoku.style.gridTemplateRows = row;
-    sodoku.id = "sodoku";
-
-    // group
-    for (let group = 1; group <= numberOfItems; group++) {
-        const groupEl = document.createElement("div");
-
-        const col = new Array(Math.sqrt(numberOfItems)).fill("minmax(10px, 50px)").join(" ");
-        const row = new Array(Math.sqrt(numberOfItems)).fill("minmax(10px, 50px)").join(" ");
-
-        groupEl.style.gridTemplateColumns = col;
-        groupEl.style.gridTemplateRows = row;
-
-        groupEl.classList.add("group");
-        groupEl.setAttribute("group", group);
-
-        // items inside group
-        for (let item = 1; item <= numberOfItems; item++) {
-            const itemEl = document.createElement("div");
-
-            const col = new Array(Math.sqrt(numberOfItems)).fill("1fr").join(" ");
-            const row = new Array(Math.sqrt(numberOfItems)).fill("1fr").join(" ");
-
-            itemEl.style.gridTemplateColumns = col;
-            itemEl.style.gridTemplateRows = row;
-
-            itemEl.classList.add("item");
-            itemEl.setAttribute("group", group);
-            itemEl.setAttribute("item", item);
-            itemEl.setAttribute("row", 0);
-            itemEl.setAttribute("col", 0);
-            itemEl.setAttribute("value", item);
-
-            itemEl.innerText = `${group},${item}`;
-            groupEl.appendChild(itemEl);
-        }
-
-        sodoku.appendChild(groupEl);
-    }
-
-    container.appendChild(sodoku);
+  container.appendChild(sodoku);
 }
 
-createLayoutGrid(4);
+createGrid(4);

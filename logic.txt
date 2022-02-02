@@ -1,16 +1,4 @@
 
-4 Groups -> 4 Items
-
-// Row 0 calculating
-
-const group = 4;
-for(let row = 1; row <= Math.sqrt(group); row++) {
-    for(let col = 1; col <= Math.sqrt(group); col++) {
-        console.log(`${row},${col}`);
-    }
-}
-
-
 // ==================================================================
 
 
