@@ -41,7 +41,3 @@ body {
   font-weight: bold;
   font-size: 20px;
 }
-
-.item::before {
-  content: attr("value");
-}
