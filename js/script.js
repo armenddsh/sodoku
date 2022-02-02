@@ -1,5 +1,5 @@
 const container = document.getElementById("container");
-const sizesAllowed = [4, 9];
+const sizesAllowed = [4, 9, 16, 25, 36, 49, 64, 81, 100];
 
 const borderStyle = "2px solid #000";
 const groups = [];
@@ -79,4 +79,4 @@ function createGrid(numberOfItems) {
   }
 }
 
-createGrid(4);
+createGrid(9);
