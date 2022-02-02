@@ -4,21 +4,15 @@ const sizesAllowed = [4, 9];
 const borderStyle = "2px solid #000";
 const groups = [];
 
-function findGroupElement(groupNumber, elementNumber, numberOfItems) {
-  numberOfItems = Math.sqrt(numberOfItems);
+function findGroupElement(groupNumber, elementNumber) {
+  const element = groups[groupNumber][elementNumber - 1];
+  const row = element.getAttribute("row");
+  const col = element.getAttribute("col");
+  const group = element.getAttribute("group");
+  const item = element.getAttribute("item");
 
-  // numberOfItems - 2
-  // group - 4
-  // element - 2
-  // result 3-4
-
-  const row = 1;
-  const col = 1;
-
-  return `${row}-${col}`;
+  return `${row}-${item}`;
 }
-
-findGroupElement(4, 3, 4);
 
 function createGrid(numberOfItems) {
   if (!sizesAllowed.includes(numberOfItems)) {
@@ -56,11 +50,13 @@ function createGrid(numberOfItems) {
   for (let r = 0; r < numberOfItems; r += p) {
     for (let c = 0; c < numberOfItems; c += p) {
       let item = 1;
+      groups[group] = [];
       for (let row = 1; row <= p; row++) {
         for (let col = 1; col <= p; col++) {
           const itemEl = document.getElementById(`${row + r}-${col + c}`);
           itemEl.innerText = `${item}`;
           itemEl.setAttribute("group", group);
+          itemEl.setAttribute("item", item);
           item = item + 1;
 
           if (col == 1) {
@@ -75,6 +71,7 @@ function createGrid(numberOfItems) {
           if (row == p) {
             itemEl.style.borderBottom = borderStyle;
           }
+          groups[group].push(itemEl);
         }
       }
       group = group + 1;
