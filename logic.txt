@@ -1,0 +1,56 @@
+
+4 Groups -> 4 Items
+
+// Row 0 calculating
+
+const group = 4;
+for(let row = 1; row <= Math.sqrt(group); row++) {
+    for(let col = 1; col <= Math.sqrt(group); col++) {
+        console.log(`${row},${col}`);
+    }
+}
+
+
+// ==================================================================
+
+
+const groupCount = 4;
+const allGroups = [];
+for(let row = 1; row <= groupCount; row++) {
+    for(let col = 1; col <= groupCount; col++) {
+        allGroups.push(`r: ${row} c: ${col}`);
+    }
+}
+
+
+let m = 0;
+const groups = [];
+let miniGroup = [];
+
+for(let row = 0; row < allGroups.length; row++) {
+    const item = allGroups[row];
+    miniGroup.push(item);
+
+    if (m == groupCount - 1) {
+        groups.push(miniGroup);
+        m = 0;
+        miniGroup = [];
+    } else {
+        m = m + 1;
+    }
+}
+console.log(groups);
+
+
+// ==================================================================
+
+E1 ->  1 1
+
+E2 ->  1 2
+
+E3 ->  2 1
+
+E4 ->  2 2
+
+
+

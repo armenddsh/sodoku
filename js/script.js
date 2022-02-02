@@ -15,7 +15,7 @@ function createLayoutGrid(numberOfItems) {
     sodoku.id = "sodoku";
 
     // group
-    for (let group = 0; group < numberOfItems; group++) {
+    for (let group = 1; group <= numberOfItems; group++) {
         const groupEl = document.createElement("div");
 
         const col = new Array(Math.sqrt(numberOfItems)).fill("minmax(10px, 50px)").join(" ");
@@ -28,7 +28,7 @@ function createLayoutGrid(numberOfItems) {
         groupEl.setAttribute("group", group);
 
         // items inside group
-        for (let item = 0; item < numberOfItems; item++) {
+        for (let item = 1; item <= numberOfItems; item++) {
             const itemEl = document.createElement("div");
 
             const col = new Array(Math.sqrt(numberOfItems)).fill("1fr").join(" ");
@@ -40,9 +40,11 @@ function createLayoutGrid(numberOfItems) {
             itemEl.classList.add("item");
             itemEl.setAttribute("group", group);
             itemEl.setAttribute("item", item);
+            itemEl.setAttribute("row", 0);
+            itemEl.setAttribute("col", 0);
             itemEl.setAttribute("value", item);
 
-            itemEl.innerText = `G${group}${item}`;
+            itemEl.innerText = `${group},${item}`;
             groupEl.appendChild(itemEl);
         }
 
@@ -52,4 +54,4 @@ function createLayoutGrid(numberOfItems) {
     container.appendChild(sodoku);
 }
 
-createLayoutGrid(9);
+createLayoutGrid(4);
