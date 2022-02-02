@@ -10,6 +10,10 @@ function generateNumbers() {
   // TO DO Implement
 }
 
+function checkSolution() {
+    // TO DO Implement
+}
+
 function numberClick(event) {
   if (selected) {
     const number = event.target.innerText;
