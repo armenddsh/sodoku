@@ -3,7 +3,31 @@ const sizesAllowed = [4, 9, 16, 25, 36, 49, 64, 81, 100];
 
 const borderStyle = "2px solid #000";
 const groups = [];
-let selected = "1-1";
+let selected = "";
+
+
+function numberClick(event) {
+    if (selected) {
+        const number = event.target.innerText;
+        document.getElementById(selected).innerText = number;
+    }
+}
+
+function createNumbers() {
+    const containerNumbers = document.createElement("div");
+    containerNumbers.id = "numbers";
+    containerNumbers.classList.add("numbers");
+
+    for (let k = 0; k < 9; k++) {
+        const number = document.createElement("span");
+        number.addEventListener("click", numberClick);
+        number.classList.add("number");
+        number.innerText = k;
+
+        containerNumbers.appendChild(number);
+    }
+    container.appendChild(containerNumbers);
+}
 
 function findGroupElement(groupNumber, elementNumber) {
   const element = groups[groupNumber][elementNumber - 1];
@@ -16,39 +40,39 @@ function findGroupElement(groupNumber, elementNumber) {
 }
 
 function clearAllHover() {
-    const elements = document.getElementById("sodoku").childNodes;
-    for (const element of elements) {
-        if(element.classList.contains("hover")) {
-            element.classList.remove("hover");
-        }
-        if(element.classList.contains("hint")) {
-            element.classList.remove("hint");
-        }
+  const elements = document.getElementById("sodoku").childNodes;
+  for (const element of elements) {
+    if (element.classList.contains("hover")) {
+      element.classList.remove("hover");
     }
+    if (element.classList.contains("hint")) {
+      element.classList.remove("hint");
+    }
+  }
 }
 
 function itemOnHover(id, numberOfItems) {
-    clearAllHover();
-    document.getElementById(id).classList.add("hover");
-    const elements = findXYElements(id, numberOfItems);
-    for (const element of elements) {
-        element.classList.add("hint");
-    }
+  clearAllHover();
+  document.getElementById(id).classList.add("hover");
+  const elements = findXYElements(id, numberOfItems);
+  for (const element of elements) {
+    element.classList.add("hint");
+  }
 }
 
 function findXYElements(id, numberOfItems) {
-    const [row, col] = id.split("-");
-    const elements = [];
-    for (let r = 1; r <= numberOfItems; r++) {
-        const el = document.getElementById(`${row}-${r}`);
-        elements.push(el);
-    }
-    for (let c = 1; c <= numberOfItems; c++) {
-        const el = document.getElementById(`${c}-${col}`);
-        elements.push(el);
-    }
+  const [row, col] = id.split("-");
+  const elements = [];
+  for (let r = 1; r <= numberOfItems; r++) {
+    const el = document.getElementById(`${row}-${r}`);
+    elements.push(el);
+  }
+  for (let c = 1; c <= numberOfItems; c++) {
+    const el = document.getElementById(`${c}-${col}`);
+    elements.push(el);
+  }
 
-    return elements;
+  return elements;
 }
 
 function createGrid(numberOfItems) {
@@ -121,3 +145,4 @@ function createGrid(numberOfItems) {
 }
 
 createGrid(9);
+createNumbers();

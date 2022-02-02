@@ -50,3 +50,24 @@ body {
 .hover {
   background: rgb(113, 140, 150);
 }
+
+.numbers {
+  display: flex;
+  justify-content: center;
+}
+
+.number {
+  padding: 1rem 1.3rem;
+  border: 3px solid black;
+  margin: .5rem;
+  cursor: pointer;
+}
+
+.number:hover {
+  background:  rgb(157, 195, 207);
+}
+
+.title {
+  font-size: 32px;
+  text-align: center;
+}
