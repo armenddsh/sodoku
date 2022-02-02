@@ -1,6 +1,7 @@
 const container = document.getElementById("container");
 const sizesAllowed = [4, 9, 16, 25, 36, 49, 64, 81, 100];
 
+const numberOfItems = 4;
 const borderStyle = "2px solid #000";
 const groups = [];
 let selected = "";
@@ -22,7 +23,7 @@ function createNumbers() {
     containerNumbers.id = "numbers";
     containerNumbers.classList.add("numbers");
 
-    for (let k = 0; k < 9; k++) {
+    for (let k = 1; k <= numberOfItems; k++) {
         const number = document.createElement("span");
         number.addEventListener("click", numberClick);
         number.classList.add("number");
@@ -148,5 +149,5 @@ function createGrid(numberOfItems) {
   }
 }
 
-createGrid(9);
+createGrid(numberOfItems);
 createNumbers();
