@@ -107,7 +107,7 @@ function createGrid(numberOfItems) {
       itemEl.classList.add("item");
       itemEl.setAttribute("row", row);
       itemEl.setAttribute("col", col);
-      itemEl.innerText = `${row}-${col}`;
+      itemEl.innerText = ``;
       sodoku.appendChild(itemEl);
     }
   }
