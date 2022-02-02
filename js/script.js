@@ -3,6 +3,7 @@ const sizesAllowed = [4, 9, 16, 25, 36, 49, 64, 81, 100];
 
 const borderStyle = "2px solid #000";
 const groups = [];
+let selected = "1-1";
 
 function findGroupElement(groupNumber, elementNumber) {
   const element = groups[groupNumber][elementNumber - 1];
@@ -12,6 +13,42 @@ function findGroupElement(groupNumber, elementNumber) {
   const item = element.getAttribute("item");
 
   return `${row}-${item}`;
+}
+
+function clearAllHover() {
+    const elements = document.getElementById("sodoku").childNodes;
+    for (const element of elements) {
+        if(element.classList.contains("hover")) {
+            element.classList.remove("hover");
+        }
+        if(element.classList.contains("hint")) {
+            element.classList.remove("hint");
+        }
+    }
+}
+
+function itemOnHover(id, numberOfItems) {
+    clearAllHover();
+    document.getElementById(id).classList.add("hover");
+    const elements = findXYElements(id, numberOfItems);
+    for (const element of elements) {
+        element.classList.add("hint");
+    }
+}
+
+function findXYElements(id, numberOfItems) {
+    const [row, col] = id.split("-");
+    const elements = [];
+    for (let r = 1; r <= numberOfItems; r++) {
+        const el = document.getElementById(`${row}-${r}`);
+        elements.push(el);
+    }
+    for (let c = 1; c <= numberOfItems; c++) {
+        const el = document.getElementById(`${c}-${col}`);
+        elements.push(el);
+    }
+
+    return elements;
 }
 
 function createGrid(numberOfItems) {
@@ -54,6 +91,10 @@ function createGrid(numberOfItems) {
       for (let row = 1; row <= p; row++) {
         for (let col = 1; col <= p; col++) {
           const itemEl = document.getElementById(`${row + r}-${col + c}`);
+          itemEl.addEventListener("click", (e) => {
+            selected = e.target.id;
+            itemOnHover(e.target.id, numberOfItems);
+          });
           itemEl.innerText = `${item}`;
           itemEl.setAttribute("group", group);
           itemEl.setAttribute("item", item);

@@ -40,4 +40,13 @@ body {
 
   font-weight: bold;
   font-size: 20px;
+  cursor: pointer;
+}
+
+.hint {
+  background: rgb(152, 188, 201);
+}
+
+.hover {
+  background: rgb(113, 140, 150);
 }
