@@ -1,37 +1,36 @@
 const container = document.getElementById("container");
-const sizesAllowed = [4, 9, 16, 25, 36, 49, 64, 81, 100];
+const sizesAllowed = [...Array(10).keys()].map((m) => m + 1).map((m) => m * m);
 
 const numberOfItems = 4;
 const borderStyle = "2px solid #000";
 const groups = [];
 let selected = "";
 
-
 function generateNumbers() {
-    // TO DO Implement
+  // TO DO Implement
 }
 
 function numberClick(event) {
-    if (selected) {
-        const number = event.target.innerText;
-        document.getElementById(selected).innerText = number;
-    }
+  if (selected) {
+    const number = event.target.innerText;
+    document.getElementById(selected).innerText = number;
+  }
 }
 
 function createNumbers() {
-    const containerNumbers = document.createElement("div");
-    containerNumbers.id = "numbers";
-    containerNumbers.classList.add("numbers");
+  const containerNumbers = document.createElement("div");
+  containerNumbers.id = "numbers";
+  containerNumbers.classList.add("numbers");
 
-    for (let k = 1; k <= numberOfItems; k++) {
-        const number = document.createElement("span");
-        number.addEventListener("click", numberClick);
-        number.classList.add("number");
-        number.innerText = k;
+  for (let k = 1; k <= numberOfItems; k++) {
+    const number = document.createElement("span");
+    number.addEventListener("click", numberClick);
+    number.classList.add("number");
+    number.innerText = k;
 
-        containerNumbers.appendChild(number);
-    }
-    container.appendChild(containerNumbers);
+    containerNumbers.appendChild(number);
+  }
+  container.appendChild(containerNumbers);
 }
 
 function findGroupElement(groupNumber, elementNumber) {
