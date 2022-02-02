@@ -68,6 +68,7 @@ body {
   border: 3px solid black;
   margin: 0.5rem;
   cursor: pointer;
+  font-weight: bold;
 }
 
 .number:hover {
