@@ -6,19 +6,37 @@ const borderStyle = "2px solid #000";
 const groups = [];
 let selected = "";
 
+function validateGrid() {
+    // TO DO
+}
+
 function randomIntFromInterval(min, max) {
     return Math.floor(Math.random() * (max - min + 1) + min);
 }
 
+function pickElementFromList(cells, numberOfItems) {
+    let least = numberOfItems * numberOfItems;
+    let item = null;
+    for (const cell of cells) {
+        const elements = [...findXYElements(cell.id, numberOfItems), ...groups[cell.getAttribute("group")]]
+        .filter( f => f.id !== cell.id && f.innerText === "");
+        if (elements.length < least) {
+            least = elements.length;
+            item = cell;
+        }
+    }
+
+    return item;
+}
+
 function backtracking(cell, number, numberOfItems, stack, retry) {
     if (!cell) {
-        debugger;
         const emptyCells = getAllCells().filter(f => f.innerText === "");
         if (emptyCells.length === 0) {
             validateGrid();
             return;
         }
-        const randomCell = emptyCells[randomIntFromInterval(0,emptyCells.length)];
+        const randomCell = emptyCells[randomIntFromInterval(0,emptyCells.length - 1)];
         const randomNumber = randomIntFromInterval(1, numberOfItems);
         return backtracking(randomCell, randomNumber, numberOfItems, stack, retry);
     }
@@ -30,24 +48,37 @@ function backtracking(cell, number, numberOfItems, stack, retry) {
         .filter(f => f == number);
     if (elementsExistsOnOtherCells.length === 0) {
         cell.innerText = number;
+        if (!stack.find(f => f.id == cell.id)) {
+            stack.push(cell);
+        }
 
         const filterFilteredElements = elements.filter(f => f.innerText === "");
-        const randomPickFromList = filterFilteredElements[randomIntFromInterval(1,filterFilteredElements.length)];
+        const randomPickFromList = pickElementFromList(filterFilteredElements, numberOfItems);
         const randomNumber = randomIntFromInterval(1,numberOfItems);
-
-        stack.push(randomPickFromList);
-
+    
         return backtracking(randomPickFromList, randomNumber, numberOfItems, stack, retry)
     } else {
-        debugger;
         if (retry < numberOfItems) {
             retry = retry + 1;
             return backtracking(cell, retry, numberOfItems, stack, retry);   
         } else {
-            const el = stack.pop();
-            retry = 0;
-            const randomNumber = randomIntFromInterval(1,numberOfItems);
-            return backtracking(el, randomNumber, numberOfItems, stack, retry);   
+            const lastElement = stack.pop();
+            if (lastElement) {
+                lastElement.innerText = "";
+                const el = stack.pop();
+                retry = 0;
+                const numbers = [];
+                for (let index = 1; index <= numberOfItems; index++) {
+                    if(index !== parseInt(el.innerText)) {
+                        numbers.push(index);
+                    }
+                }
+
+                el.innerText = "";
+
+                const randomNumber = numbers[0, randomIntFromInterval(1,numbers.length) - 1];
+                return backtracking(el, randomNumber, numberOfItems, stack, retry);
+            }   
         }
     }
 }
