@@ -79,3 +79,19 @@ body {
   font-size: 32px;
   text-align: center;
 }
+
+.user-won {
+  display: block;
+  margin: 1rem;
+  color: green;
+  font-size: 40px;
+  display: none;
+}
+
+.user-won::before {
+  content: "-";
+}
+
+.user-won::after {
+  content: "-";
+}

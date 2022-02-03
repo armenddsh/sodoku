@@ -6,8 +6,24 @@ const borderStyle = "2px solid #000";
 const groups = [];
 let selected = "";
 
-function validateGrid() {
-    // TO DO
+function validateGrid(numberOfItems) {
+    const childNodes = document.getElementById("sodoku").childNodes;
+    let won = true;
+    const arr = [...Array(numberOfItems).keys()].map(m => m + 1);
+    for (const node of childNodes) {
+        const elements = findXYElements(node.id, numberOfItems)
+        .map(f => f.innerText)
+        .filter(f => f !== "")
+        .map(f => parseInt(f));
+
+        for (const ar of arr) {
+            if (!elements.includes(ar)) {
+                won = false;
+            }
+        }
+    }
+
+    return won;
 }
 
 function removeSomeItems() {
@@ -78,7 +94,7 @@ function pickElementFromList(cells, numberOfItems, stack) {
 }
 
 function goBack(cell, number, numberOfItems, stack, retry) {
-    if (checkIfFinnished()) {
+    if (checkIfFinnished(numberOfItems)) {
         return;
     }
     const lastElement = stack.pop().item;
@@ -99,16 +115,16 @@ function goBack(cell, number, numberOfItems, stack, retry) {
     }
 }
 
-function checkIfFinnished() {
+function checkIfFinnished(numberOfItems) {
     const emptyCells = getAllCells().filter((f) => f.innerText === "");
     if (emptyCells.length === 0) {
-        return validateGrid() || true;
+        return true;
     }
     return false;
 }
 
 function backtracking(cell, number, numberOfItems, stack, retry) {
-    if (checkIfFinnished()) {
+    if (checkIfFinnished(numberOfItems)) {
         return;
     }
     if (!cell) {
@@ -212,6 +228,10 @@ function numberClick(event) {
         const number = event.target.innerText;
         document.getElementById(selected).innerText = number;
     }
+    const userWon = validateGrid(numberOfItems);
+    if(userWon) {
+        showUserWon();
+    }
 }
 
 function createNumbers() {
@@ -279,7 +299,16 @@ function findXYElements(id, numberOfItems) {
     return elements;
 }
 
+function hideUserWon() {
+    document.getElementById("user-won").style.display = "none";
+}
+
+function showUserWon() {
+    document.getElementById("user-won").style.display = "block";
+}
+
 function createGrid(numberOfItems) {
+    hideUserWon();
     if (!sizesAllowed.includes(numberOfItems)) {
         numberOfItems = 4;
     }
