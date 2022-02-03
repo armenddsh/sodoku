@@ -6,15 +6,30 @@ const borderStyle = "2px solid #000";
 const groups = [];
 let selected = "";
 
+document.addEventListener("keypress", (event) => {
+    const digit = event.code;
+    if (selected && digit && digit.startsWith("Digit")) {
+        const d = parseInt(digit.replace("Digit", ""));
+        if (d && d <= numberOfItems) {
+            document.getElementById(selected).innerText = d;
+
+            const userWon = validateGrid(numberOfItems);
+            if (userWon) {
+                showUserWon();
+            }
+        }
+    }
+});
+
 function validateGrid(numberOfItems) {
     const childNodes = document.getElementById("sodoku").childNodes;
     let won = true;
-    const arr = [...Array(numberOfItems).keys()].map(m => m + 1);
+    const arr = [...Array(numberOfItems).keys()].map((m) => m + 1);
     for (const node of childNodes) {
         const elements = findXYElements(node.id, numberOfItems)
-        .map(f => f.innerText)
-        .filter(f => f !== "")
-        .map(f => parseInt(f));
+            .map((f) => f.innerText)
+            .filter((f) => f !== "")
+            .map((f) => parseInt(f));
 
         for (const ar of arr) {
             if (!elements.includes(ar)) {
@@ -229,7 +244,7 @@ function numberClick(event) {
         document.getElementById(selected).innerText = number;
     }
     const userWon = validateGrid(numberOfItems);
-    if(userWon) {
+    if (userWon) {
         showUserWon();
     }
 }
