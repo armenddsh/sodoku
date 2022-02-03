@@ -14,7 +14,7 @@ function randomIntFromInterval(min, max) {
     return Math.floor(Math.random() * (max - min + 1) + min);
 }
 
-function pickElementFromList(cells, numberOfItems) {
+function pickElementFromList(cells, numberOfItems, stack) {
     let least = numberOfItems * numberOfItems;
     let item = null;
     let numbers = [];
@@ -40,36 +40,60 @@ function pickElementFromList(cells, numberOfItems) {
         }
     }
 
+    if (item) {
+        let allVisited = false;
+        const itemStack = stack.find(f => f.item.id === item.id);
+        if (itemStack) {
+            for(let visit of itemStack.visited) {
+                if (numbers.includes(visit)){
+                    allVisited = true;
+                } else {
+                    allVisited = false;
+                }
+            }
+        }
+        if(allVisited) {
+            numbers = [];
+        }
+    }
+
     return [item, numbers];
 }
 
 function goBack(cell, number, numberOfItems, stack, retry) {
-    const lastElement = stack.pop();
+    if (checkIfFinnished()) {
+        return;
+    }
+    const lastElement = stack.pop().item;
     if (lastElement) {
-        lastElement.innerText = "";
-        const el = stack.pop();
         retry = 0;
         const numbers = [];
         for (let index = 1; index <= numberOfItems; index++) {
-            if(index !== parseInt(el.innerText)) {
+            if(index !== parseInt(lastElement.innerText)) {
                 numbers.push(index);
             }
         }
 
-        el.innerText = "";
+        lastElement.innerText = "";
 
         const randomNumber = numbers[0, randomIntFromInterval(1,numbers.length) - 1];
-        return backtracking(el, randomNumber, numberOfItems, stack, retry);
+        return backtracking(lastElement, randomNumber, numberOfItems, stack, retry);
     }
 }
 
+function checkIfFinnished() {
+    const emptyCells = getAllCells().filter(f => f.innerText === "");
+    if (emptyCells.length === 0) {
+        return validateGrid() || true;
+    }
+    return false;
+}
+
 function backtracking(cell, number, numberOfItems, stack, retry) {
+    if (checkIfFinnished()) {
+        return;
+    }
     if (!cell) {
-        const emptyCells = getAllCells().filter(f => f.innerText === "");
-        if (emptyCells.length === 0) {
-            validateGrid();
-            return;
-        }
         const randomCell = emptyCells[randomIntFromInterval(0,emptyCells.length - 1)];
         const randomNumber = randomIntFromInterval(1, numberOfItems);
         return backtracking(randomCell, randomNumber, numberOfItems, stack, retry);
@@ -83,23 +107,31 @@ function backtracking(cell, number, numberOfItems, stack, retry) {
     if (elementsExistsOnOtherCells.length === 0) {        
         cell.innerText = number;
         if (!stack.find(f => f.id == cell.id)) {
-            stack.push(cell);
+            stack.push({
+                item: cell,
+                visited: [number]
+            });
         }
 
         const filterFilteredElements = elements.filter(f => f.innerText === "");
-        const [randomPickFromList, numbers] = pickElementFromList(filterFilteredElements, numberOfItems);
+        const [randomPickFromList, numbers] = pickElementFromList(filterFilteredElements, numberOfItems, stack);
         const randomNumber = numbers[randomIntFromInterval(1,numbers.length) - 1];
         if (!randomNumber) {
             return goBack(cell, retry, numberOfItems, stack, retry);
         }
         return backtracking(randomPickFromList, randomNumber || 0, numberOfItems, stack, retry)
     } else {
+        const stackCell = stack.find(f => f.item.id === cell.id);
         if (retry < numberOfItems) {
             retry = retry + 1;
-            return backtracking(cell, retry, numberOfItems, stack, retry);   
+            if (stackCell && !stackCell.visited.includes(retry)) {
+                return backtracking(cell, retry, numberOfItems, stack, retry);   
+            }
         } else {
             return goBack(cell, retry, numberOfItems, stack, retry);
         }
+
+        return goBack(cell, retry, numberOfItems, stack, retry);
     }
 }
 
@@ -126,7 +158,10 @@ function generateRandomCell(numberOfItems) {
 function generateSolvedPuzzle(numberOfItems) {
     const randomCell = generateRandomCell(numberOfItems);
     const randomNumber = randomIntFromInterval(1,numberOfItems);
-    const stack = [randomCell];
+    const stack = [{
+        item: randomCell,
+        visited: []
+    }];
     const retry = 0;
     backtracking(randomCell, randomNumber, numberOfItems, stack, retry);
 }
@@ -194,6 +229,9 @@ function itemOnHover(id, numberOfItems) {
 }
 
 function findXYElements(id, numberOfItems) {
+    if (!id){
+        debugger;
+    }
   const [row, col] = id.split("-");
   const elements = [];
   for (let r = 1; r <= numberOfItems; r++) {
