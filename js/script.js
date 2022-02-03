@@ -6,6 +6,80 @@ const borderStyle = "2px solid #000";
 const groups = [];
 let selected = "";
 
+function randomIntFromInterval(min, max) {
+    return Math.floor(Math.random() * (max - min + 1) + min);
+}
+
+function backtracking(cell, number, numberOfItems, stack, retry) {
+    if (!cell) {
+        debugger;
+        const emptyCells = getAllCells().filter(f => f.innerText === "");
+        if (emptyCells.length === 0) {
+            validateGrid();
+            return;
+        }
+        const randomCell = emptyCells[randomIntFromInterval(0,emptyCells.length)];
+        const randomNumber = randomIntFromInterval(1, numberOfItems);
+        return backtracking(randomCell, randomNumber, numberOfItems, stack, retry);
+    }
+    const elements = [...findXYElements(cell.id, numberOfItems), ...groups[cell.getAttribute("group")]]
+        .filter( f => f.id !== cell.id);
+        
+    const elementsExistsOnOtherCells = elements
+        .map(f => f.innerText)
+        .filter(f => f == number);
+    if (elementsExistsOnOtherCells.length === 0) {
+        cell.innerText = number;
+
+        const filterFilteredElements = elements.filter(f => f.innerText === "");
+        const randomPickFromList = filterFilteredElements[randomIntFromInterval(1,filterFilteredElements.length)];
+        const randomNumber = randomIntFromInterval(1,numberOfItems);
+
+        stack.push(randomPickFromList);
+
+        return backtracking(randomPickFromList, randomNumber, numberOfItems, stack, retry)
+    } else {
+        debugger;
+        if (retry < numberOfItems) {
+            retry = retry + 1;
+            return backtracking(cell, retry, numberOfItems, stack, retry);   
+        } else {
+            const el = stack.pop();
+            retry = 0;
+            const randomNumber = randomIntFromInterval(1,numberOfItems);
+            return backtracking(el, randomNumber, numberOfItems, stack, retry);   
+        }
+    }
+}
+
+function getAllCells() {
+    const nodes = [];
+    const childNodes = document.getElementById("sodoku").childNodes;
+    for (const node of childNodes) {
+        if (node.innerText === "") {
+            nodes.push(node);
+        }
+    }
+
+    return nodes;
+}
+
+function generateRandomCell(numberOfItems) {
+    const randomRow = randomIntFromInterval(1,numberOfItems);
+    const randomCol = randomIntFromInterval(1,numberOfItems);
+
+    const randomCell = document.getElementById(`${randomRow}-${randomCol}`);
+    return randomCell;
+}
+
+function generateSolvedPuzzle(numberOfItems) {
+    const randomCell = generateRandomCell(numberOfItems);
+    const randomNumber = randomIntFromInterval(1,numberOfItems);
+    const stack = [randomCell];
+    const retry = 0;
+    backtracking(randomCell, randomNumber, numberOfItems, stack, retry);
+}
+
 function generateNumbers() {
   // TO DO Implement
 }
@@ -127,7 +201,7 @@ function createGrid(numberOfItems) {
             selected = e.target.id;
             itemOnHover(e.target.id, numberOfItems);
           });
-          itemEl.innerText = `${item}`;
+          itemEl.innerText = "";
           itemEl.setAttribute("group", group);
           itemEl.setAttribute("item", item);
           item = item + 1;
@@ -154,3 +228,4 @@ function createGrid(numberOfItems) {
 
 createGrid(numberOfItems);
 createNumbers();
+generateSolvedPuzzle(numberOfItems);
