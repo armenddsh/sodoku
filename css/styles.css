@@ -15,9 +15,16 @@ body {
   align-items: center;
 }
 
+#container {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+}
+
 #sodoku {
   border: 3px solid #000;
-  display: grid;
+  display: inline-grid;
   margin: 1rem;
 }
 
@@ -40,8 +47,51 @@ body {
 
   font-weight: bold;
   font-size: 20px;
+  cursor: pointer;
 }
 
-.item::before {
-  content: attr("value");
+.hint {
+  background: rgb(152, 188, 201);
+}
+
+.hover {
+  background: rgb(113, 140, 150);
+}
+
+.numbers {
+  display: flex;
+  justify-content: center;
+}
+
+.number {
+  padding: 1rem 1.3rem;
+  border: 3px solid black;
+  margin: 0.5rem;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.number:hover {
+  background: rgb(157, 195, 207);
+}
+
+.title {
+  font-size: 32px;
+  text-align: center;
+}
+
+.user-won {
+  display: block;
+  margin: 1rem;
+  color: green;
+  font-size: 40px;
+  display: none;
+}
+
+.user-won::before {
+  content: "-";
+}
+
+.user-won::after {
+  content: "-";
 }
